@@ -25,6 +25,16 @@ export class UtilService {
         }
     }
 
+    /*
+    Used to verify if needed keys are present
+    */
+    verifyKeys(parsedQuery, keyArr){
+        for (let i = 0; i < keyArr.length; i++) {
+            if (parsedQuery[keyArr[i]] == undefined) return false;
+        }
+        return true;
+    }
+
     logData(data, isError=false, levelOfDetail=0):void{
         const LOD_Name = levelOfDetail == 0 ? "" : "{DEBUG} "; //production name does not need to be shown
         if(consolePrint && logLevel >= levelOfDetail) console.log(`${LOD_Name}${isError?"Error: ":""}${data}`)
