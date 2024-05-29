@@ -18,11 +18,19 @@ export class AppController {
     return this.appService.getServerResponse(true, this.plmService.createQRData(this.constants.AXEDA_MODEL, this.constants.WCRU_SERIAL_NUMBER, this.constants.WCRU_ASSET_NUMBER));
   }
   @Get("/qrCode")
-  qrCode(@Query() params: any ): string {
-    if (params.length < 1 || !this.utilService.verifyKeys(params, ['data'])) {
-      this.utilService.logData("/qrCode request rejected, needs 'data' as parameter", true);
-      return this.appService.getServerResponse(false, "Request rejected, needs 'data' as parameter");
+  async qrCode(@Query() params: any) {
+    if (params.length < 2 || !this.utilService.verifyKeys(params, ['data', 'path'])) {
+      this.utilService.logData("/qrCode request rejected, needs 'data' and 'path' as parameters", true);
+      return this.appService.getServerResponse(false, "Request rejected, needs 'data' and 'path' as parameters");
     }
-    return params;
+    let response = ""
+    await this.plmService.createQRCode(params.data, params.path).then(() => {
+      this.utilService.logDebug(`QR Code has been saved to ${params.path}`)
+      response = this.appService.getServerResponse(true, "QR code has been saved.");
+    }).catch((err) => {
+      this.utilService.logData(`Could not encrypt qr data - ${err}`, true)
+      response = this.appService.getServerResponse(false, "Could not encrypt qr data")
+    })
+    return response;
   }
 }

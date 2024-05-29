@@ -40,4 +40,8 @@ export class UtilService {
         if(consolePrint && logLevel >= levelOfDetail) console.log(`${LOD_Name}${isError?"Error: ":""}${data}`)
         //logger.error(`${LOD_Name}${isError?"Error: ":""}${data}`)
     }
+
+    logDebug(data, isError=false){
+        this.logData(data, isError, 1);
+    }
 }
