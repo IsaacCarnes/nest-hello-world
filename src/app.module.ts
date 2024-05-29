@@ -4,10 +4,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConstantsService } from './constants/constants.service';
 import { UtilService } from './util/util.service';
-import { PlmService } from './plm/plm.service';
+import { PlmQrService } from './plm-qr/plm-qr.service';
 
 @Module({
   controllers: [AppController],
-  providers: [AppService, ConstantsService, UtilService, PlmService],
+  providers: [AppService, ConstantsService, UtilService, PlmQrService],
 })
 export class AppModule {}

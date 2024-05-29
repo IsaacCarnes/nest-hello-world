@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { PlmService } from './plm/plm.service';
+import { PlmQrService } from './plm-qr/plm-qr.service';
 import { ConstantsService } from './constants/constants.service';
 import { UtilService } from './util/util.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService, private readonly plmService: PlmService, private readonly constants: ConstantsService, private readonly utilService: UtilService) {}
+  constructor(private readonly appService: AppService, private readonly plmQrService: PlmQrService, private readonly constants: ConstantsService, private readonly utilService: UtilService) {}
 
   @Get()
   baseRoute(): string {
@@ -15,7 +15,7 @@ export class AppController {
   }
   @Get("/qrData")
   qrData(): string {
-    return this.appService.getServerResponse(true, this.plmService.createQRData(this.constants.AXEDA_MODEL, this.constants.WCRU_SERIAL_NUMBER, this.constants.WCRU_ASSET_NUMBER));
+    return this.appService.getServerResponse(true, this.plmQrService.createQRData(this.constants.AXEDA_MODEL, this.constants.WCRU_SERIAL_NUMBER, this.constants.WCRU_ASSET_NUMBER));
   }
   @Get("/qrCode")
   async qrCode(@Query() params: any) {
@@ -24,7 +24,7 @@ export class AppController {
       return this.appService.getServerResponse(false, "Request rejected, needs 'data' and 'path' as parameters");
     }
     let response = ""
-    await this.plmService.createQRCode(params.data, params.path).then(() => {
+    await this.plmQrService.createQRCode(params.data, params.path).then(() => {
       this.utilService.logDebug(`QR Code has been saved to ${params.path}`)
       response = this.appService.getServerResponse(true, "QR code has been saved.");
     }).catch((err) => {

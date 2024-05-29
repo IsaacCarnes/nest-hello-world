@@ -1,16 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { PlmService } from './plm.service';
+import { PlmQrService } from './plm-qr.service';
 
 describe('PlmService', () => {
-  let service: PlmService;
+  let service: PlmQrService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PlmService],
+      providers: [PlmQrService],
     }).compile();
 
-    service = module.get<PlmService>(PlmService);
+    service = module.get<PlmQrService>(PlmQrService);
   });
 
   it('should be defined', () => {

@@ -8,7 +8,7 @@ import * as QRCode from 'qrcode';
 import { UtilService } from 'src/util/util.service';
 
 @Injectable()
-export class PlmService {
+export class PlmQrService {
     constructor(private readonly utilService: UtilService) {}
     /* QR Code Functions */
     /*
