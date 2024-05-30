@@ -58,7 +58,7 @@ export class PlmQrService {
         while (this.getLastTwoDigits(string1) == string4 || this.getLastTwoDigits(string2) == string4 || this.getLastTwoDigits(string3) == string4) {
             string4 = this.makeRandString(2);
         }
-        const simplifiedModel = this.getModel(model);
+        const simplifiedModel = this.utilService.getModel(model);
         const outKey = `${simplifiedModel};${serial};${asset};${string1}${string2}${string3}${string4}`
         return outKey;
     }
@@ -75,16 +75,5 @@ export class PlmQrService {
 
     getLastTwoDigits(str) {
         return str.substring(str.length - 2, str.length);
-    }
-
-    /*
-    Simplifies model by removing workstation from model 
-    */
-    getModel(originalModel) {
-        originalModel = originalModel.toLowerCase();
-        if (originalModel.includes("stellant")) return "stellantii";
-        if (originalModel.includes("flex")) return "flex";
-        if (originalModel.includes("mrxp")) return "mrxp";
-        return originalModel;
     }
 }

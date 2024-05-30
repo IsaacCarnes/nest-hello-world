@@ -26,6 +26,17 @@ export class UtilService {
     }
 
     /*
+    Simplifies model by removing workstation from model 
+    */
+    getModel(originalModel) {
+        originalModel = originalModel.toLowerCase();
+        if (originalModel.includes("stellant")) return "stellantii";
+        if (originalModel.includes("flex")) return "flex";
+        if (originalModel.includes("mrxp")) return "mrxp";
+        return originalModel;
+    }
+
+    /*
     Used to verify if needed keys are present
     */
     verifyKeys(parsedQuery, keyArr){
