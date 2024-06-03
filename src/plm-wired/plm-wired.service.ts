@@ -11,8 +11,8 @@ import { UtilService } from 'src/util/util.service';
 import { ConstantsService } from 'src/constants/constants.service';
 import { readFileSync } from 'fs';
 
-const RSA_PUBLIC_KEY = readFileSync('../secrets/private-key.pem');
-const RSA_PRIVATE_KEY = readFileSync('../secrets/public-key.pem');
+const RSA_PUBLIC_KEY = readFileSync(path.join(__dirname,'secrets','private-key.pem'));
+const RSA_PRIVATE_KEY = readFileSync(path.join(__dirname,'secrets','public-key.pem'));
 const cIssuer = "Bayer";
 const cAudience = "www.bayer.com";
 const cSubject = "Copyright © Bayer 2023";
