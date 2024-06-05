@@ -4,15 +4,9 @@ import * as path from 'path';
 import {default as axios} from 'axios';
 import * as jwt from 'jsonwebtoken';
 import { exec } from 'child_process';
-
-//import * as crypto from 'crypto';
-
 import { UtilService } from 'src/util/util.service';
 import { ConstantsService } from 'src/constants/constants.service';
-import { readFileSync } from 'fs';
 
-const RSA_PUBLIC_KEY = readFileSync(path.join(__dirname,'secrets','private-key.pem'));
-const RSA_PRIVATE_KEY = readFileSync(path.join(__dirname,'secrets','public-key.pem'));
 const cIssuer = "Bayer";
 const cAudience = "www.bayer.com";
 const cSubject = "Copyright © Bayer 2023";
@@ -31,7 +25,7 @@ export class PlmWiredService {
     /* Wired Handshake Functions */
     startWiredHandshake = async (model = "", serial = "", asset = "") => {
         if (!startedIproxy) {
-            exec(`${path.join('C:', 'PassLinkPlatform', 'externals', 'iproxy.exe')} ${iPhoneUrl} 80`);
+            exec(`${path.join(__dirname, 'Externals', 'iproxy.exe')} ${iPhonePort} 80`);
             this.utilService.logData(`Started iproxy ${iPhoneUrl} 80`);
             startedIproxy = true;
         }
@@ -85,7 +79,7 @@ export class PlmWiredService {
                 //Stop while loop
                 retryCount = maxRetries;
                 try {
-                    const decodedPayload = jwt.verify(returnedJWT, RSA_PUBLIC_KEY, { algorithms: ['RS256'] });
+                    const decodedPayload = jwt.verify(returnedJWT, this.constants.PUBLIC_KEY, { algorithms: ['RS256'] });
 
                     if (decodedPayload.jwtStatus === "success") {
                         returnJWT = decodedPayload
@@ -119,7 +113,7 @@ export class PlmWiredService {
     /*
     Create JWT from injector info
     */
-    generateJWT(model, serial, asset) {
+    generateJWT(model, serial, asset):string {
         const payload = {
             iss: cIssuer,
             iat: Math.floor(Date.now() / 1000),
@@ -140,14 +134,15 @@ export class PlmWiredService {
         };
 
         try {
-            return jwt.sign(payload, RSA_PRIVATE_KEY, { algorithm: 'RS256', header: header });
+            const token = jwt.sign(payload, this.constants.PRIVATE_KEY, { algorithm: 'RS256', header: header });
+            return token
         } catch (error) {
             this.utilService.logData(`Error generating JWT: ${error.message}`, true)
             return undefined;
         }
     }
 
-    sleep(ms){
+    sleep(ms:number){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
