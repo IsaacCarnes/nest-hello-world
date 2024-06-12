@@ -6,8 +6,8 @@ module.exports = {
   entry: './dist/main.js',
   target: 'node',
   output: {
-    path: path.resolve(__dirname, 'packed'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'build'),
+    filename: 'passlink.adaptor.js',
   },
   resolve: {
     fallback: {
