@@ -14,14 +14,19 @@ export class AppController {
   baseRoute(): string {
     return "base route";
   }
-  @Get("/qrData")
-  qrData(): string {
-    return this.appService.getServerResponse(true, this.plmQrService.createQRData(this.constants.AXEDA_MODEL, this.constants.WCRU_SERIAL_NUMBER, this.constants.WCRU_ASSET_NUMBER));
+  @Get("/generateQRInfo") //passing punchcode info
+  qrData(@Query() params: any) : string {
+    if (params.length < 3 || !this.utilService.verifyKeys(params, ['model', 'serial', 'injectorId'])) {
+      this.utilService.logData("/generateQRCode request rejected, needs 'model', 'serial' and 'injectorId' as parameters", true);
+      return this.appService.getServerResponse(false, "Request rejected, needs 'model', 'serial' and 'injectorId' as parameters");
+    }
+    return this.appService.getServerResponse(true, this.plmQrService.generateQRInfo(params['model'], params['serial'], params['injectorId']));
   }
-  @Get("/qrCode")
-  async qrCode(@Query() params: any) {
+
+  @Get("/generateQRCode") // creating encrypted qrCode
+  async generateQRCode(@Query() params: any) {
     if (params.length < 2 || !this.utilService.verifyKeys(params, ['data', 'path'])) {
-      this.utilService.logData("/qrCode request rejected, needs 'data' and 'path' as parameters", true);
+      this.utilService.logData("/generateQRCode request rejected, needs 'data' and 'path' as parameters", true);
       return this.appService.getServerResponse(false, "Request rejected, needs 'data' and 'path' as parameters");
     }
     let response = ""
@@ -34,14 +39,19 @@ export class AppController {
     })
     return response;
   }
-  @Get("/wiredHandshake")
-  async wiredHandshake() {
+
+  @Get("/unlockViaWired") // unlock via wired usb 
+  async unlockViaWired(@Query() params: any) {
+    if (params.length < 3 || !this.utilService.verifyKeys(params, ['model', 'serial', 'injectorId'])) {
+      this.utilService.logData("/unlockViaWired request rejected, needs 'model', 'serial' and 'injectorId' as parameters", true);
+      return this.appService.getServerResponse(false, "Request rejected, needs 'model', 'serial' and 'injectorId' as parameters");
+    }
     if (this.plmWiredService.isWiredHandshaking()) {
       this.plmWiredService.stopWiredHandshake();
       return this.appService.getServerResponse(true, "Stopped wired handshake");
     }
     let response = ""
-    await this.plmWiredService.startWiredHandshake(this.constants.AXEDA_MODEL, this.constants.WCRU_SERIAL_NUMBER, this.constants.WCRU_ASSET_NUMBER).then((data) => {
+    await this.plmWiredService.startWiredHandshake(params['model'], params['serial'], params['injectorId']).then((data) => {
       response = data;
     }).catch((err) => {
       this.utilService.logData(`Could not start wired handshake - ${err}`, true);

@@ -13,11 +13,7 @@ export class ConstantsService {
         utilServiceCopy = utilService
         configData = getConfigData();
     }
-    AXEDA_MODEL = this.utilService.getRegData("AxedaModel");
-    WCRU_SERIAL_NUMBER= this.utilService.getRegData("SerialNumber");
-    WCRU_ASSET_NUMBER= '';
-    WCRU_VERSION= this.utilService.getRegData("Version");
-    COUNTRY_CODE= this.utilService.getRegData("InstalledCountry");
+
     STATUS_FILE_NAME= "InjVersionStatus.json";
     CONTROLLER_FILE_NAME= "bundle_data.txt";
     AXEDA_REMOTE_FOLDER= path.join("C:", "Axeda", "Gateway", "SM");

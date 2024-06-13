@@ -13,7 +13,7 @@ export class PlmQrService {
     /* QR Code Functions */
     /*
         Accepts qr code data and filepath to save qr code as parameters.
-        Encrypts dataString and creates writes qrCode png to filePath
+        Encrypts dataString and creates writes generateQRCode png to filePath
     */
     createQRCode(dataString, filePath = path.join(__dirname, 'qrCode.png')) {
         const Key = "12345678901234567890123456789012";
@@ -50,7 +50,7 @@ export class PlmQrService {
         Accepts injector data as parameters including model, serial and asset.
         Formats data and adds randomized id string to end
     */
-    createQRData(model, serial, asset) {
+        generateQRInfo(model, serial, asset) {
         const string1 = this.makeRandString(6);
         const string2 = this.makeRandString(6);
         const string3 = this.makeRandString(6);
